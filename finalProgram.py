@@ -20,6 +20,14 @@ def editke(stuff):
 	c.execute("UPDATE students SET name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=? WHERE rowid=?",stuff)
 	conn.commit()
 
+def classAvgs():
+	# Get which classes do we have students registered in
+	#c.execute("SELECT class FROM students WHERE condition")
+	# Iterate through all the classes
+	# 	Iterate through all entries in the same classes, calculate average and add it to a dict
+	# 	(m+s+e+d+a)/5 -> it would be great to store all the classmates avgs in a list in a dict (1stGrade|[1,2,5])
+	#c.execute()
+
 while True:
 	sw=raw_input("[A]dd, [D]elete, [E]dit, [S]earch, [P]aint")
 	if (sw=="A" or sw=="a"):
