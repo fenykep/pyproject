@@ -85,7 +85,7 @@ def editkey_full(i):
     push += (input("Art grade: "),)
     push += (str(i),)
     
-    #Samya: Why is this edited in id as opposed to name, like the others?
+    #Samya: Why is this edited in id as opposed to name, like the others? Abel: Because the name is not unique
     c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=? WHERE rowid=?",push)
     conn.commit()
 
@@ -95,6 +95,8 @@ def searchfunction():
     
     #First Name Search
 #QUESTION: what is fetchone for? what does it do?)
+#c.execute only tells the database what to look for, but it doesn't listen (as many people in our current world, sadly)
+#c.fetchone is the one that listens to the reply (one line at a time), while c.fetchall gets every line
     if decision == "F":
         student = input("What is the first name of the student you are searching for?")
         c.execute("SELECT rowid,* FROM students WHERE first_name= '%s'" %(student))
