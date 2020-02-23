@@ -19,7 +19,9 @@ To do -
 * Whenever we search for a record using the search function we always get one result back, but what if there are multiple people
 with the same last or first name? We should edit the code to show all entries that have a specific last name or first name
 * Waiting for the extra challenges from Mr Amin!
-    
+
+*Write the code more readable (spaces between symbols).
+*Use more descriptive variable names to make it more understandable and easier to follow.
 
 """
 
@@ -38,17 +40,20 @@ Samya: Solved it!
 
 
 #Function to add a new entry to the database
+#QUESTION 1(JUD: Why can't we use 'student' or another word more descriptive instead of 'push', it is very confusing to read, at least for me)
+#QUESTION 2(JUD: Why so many interrogation marks in the commant of c.execute?)
+
 def newEntry():
-    push=()
-    push+=(input("First Name: ").upper(),)
-    push+=(input("Last Name: ").upper(),)
-    push+=(input("Address: ").upper(),)
-    push+=(input("Class: ").upper(),)
-    push+=(input("Mathematics grade: "),)
-    push+=(input("Science grade: "),)
-    push+=(input("English grade: "),)
-    push+=(input("Dutch grade: "),)
-    push+=(input("Art grade: "),)
+    push = ()
+    push += (input("First Name: ").upper(),)
+    push += (input("Last Name: ").upper(),)
+    push += (input("Address: ").upper(),)
+    push += (input("Class: ").upper(),)
+    push += (input("Mathematics grade: "),)
+    push += (input("Science grade: "),)
+    push += (input("English grade: "),)
+    push += (input("Dutch grade: "),)
+    push += (input("Art grade: "),)
     c.execute("INSERT INTO students(first_name, last_name, address, class, matg, scig, eng, dug, artg) VALUES (?,?,?,?,?,?,?,?,?)",push)
     conn.commit() 
 
@@ -72,17 +77,17 @@ def editkey_value(i):
 
 #Function to completely replace a row
 def editkey_full(i):
-    push=()
-    push+=(input("First Name: ").upper(),)
-    push+=(input("Last Name: ").upper(),)
-    push+=(input("Address: ").upper(),)
-    push+=(input("Class: ").upper(),)
-    push+=(input("Mathematics grade: "),)
-    push+=(input("Science grade: "),)
-    push+=(input("English grade: "),)
-    push+=(input("Dutch grade: "),)
-    push+=(input("Art grade: "),)
-    push+=(str(i),)
+    push = ()
+    push += (input("First Name: ").upper(),)
+    push += (input("Last Name: ").upper(),)
+    push += (input("Address: ").upper(),)
+    push += (input("Class: ").upper(),)
+    push += (input("Mathematics grade: "),)
+    push += (input("Science grade: "),)
+    push += (input("English grade: "),)
+    push += (input("Dutch grade: "),)
+    push += (input("Art grade: "),)
+    push += (str(i),)
     
     #Samya: Why is this edited in id as opposed to name, like the others?
     c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=? WHERE rowid=?",push)
@@ -93,20 +98,21 @@ def searchfunction():
     decision = input("Search by [F]irst name, [L]ast name, or [R]ow ID? ").upper()
     
     #First Name Search
+#QUESTION: what is fetchone for? what does it do?)
     if decision == "F":
         student = input("What is the first name of the student you are searching for?")
         c.execute("SELECT rowid,* FROM students WHERE first_name= '%s'" %(student))
         print(c.fetchone())
         c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE first_name= '%s'" %(student))
-        results=c.fetchone()
+        results = c.fetchone()
         
         #Avg Calculator
         sum_grade = 0
         for s in results:
-            sum_grade+=float(s)
+            sum_grade += float(s)
 
         #Shows the sum of all grades and grade average to 1 d.p.
-        avg_grade = sum_grade/5.0
+        avg_grade = sum_grade / 5.0
         print("Sum of all Grades: %.1f" % sum_grade)
         print("Grade Average: %.1f" % avg_grade)
         
@@ -116,15 +122,15 @@ def searchfunction():
         c.execute("SELECT rowid,* FROM students WHERE last_name= '%s'" %(student))
         print(c.fetchone())
         c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE last_name= '%s'" %(student))
-        results=c.fetchone()
+        results = c.fetchone()
         
         #Avg Calculator
         sum_grade = 0
         for s in results:
-            sum_grade+=float(s)
+            sum_grade += float(s)
 
         #Shows the sum of all grades and grade average to 1 d.p.
-        avg_grade = sum_grade/5.0
+        avg_grade = sum_grade / 5.0
         print("Sum of all Grades: %.1f" % sum_grade)
         print("Grade Average: %.1f" % avg_grade)
         
@@ -134,15 +140,15 @@ def searchfunction():
         c.execute("SELECT rowid, * FROM students WHERE rowid= '%s'" %(student))
         print(c.fetchone())
         c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE rowid= '%s'" %(student))
-        results=c.fetchone()
+        results = c.fetchone()
         
         #Avg Calculator
         sum_grade = 0
         for s in results:
-            sum_grade+=float(s)
+            sum_grade += float(s)
 
         #Shows the sum of all grades and grade average to 1 d.p.
-        avg_grade = sum_grade/5.0
+        avg_grade = sum_grade / 5.0
         print("Sum of all Grades: %.1f" % sum_grade)
         print("Grade Average: %.1f" % avg_grade)
         
@@ -150,6 +156,7 @@ def searchfunction():
         print("Invalid Input.")
    
 #Prints all Rows
+
 def print_all():
     print("Here are all the entries in our database:")
     c.execute('SELECT rowid, * FROM students')
@@ -173,14 +180,17 @@ def classAvgs():
     highest_class_avg = 0
     for i in classes:
         c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE class= '%s'" %(i))
-        results=c.fetchall()
+        results = c.fetchall()
         
         class_total = 0
         for j in results:
+
             #Avg Calculator
+#for s in j....? can we call it differently?
+
             sum_grade = 0
             for s in j:
-                sum_grade+=float(s)
+                sum_grade += float(s)
     
             #Calculates the student grade average and adds it to the class total
             avg_grade = sum_grade/5.0
@@ -201,37 +211,37 @@ def classAvgs():
 
 if __name__ == "__main__":
     while True:
-        sw=input("[A]dd, [D]elete, [E]dit, [S]earch, [C]lass Averages, [P]rint all - ").upper()
+        sw = input("[A]dd, [D]elete, [E]dit, [S]earch, [C]lass Averages, [P]rint all - ").upper()
     
-        if (sw=="A"):
+        if (sw == "A"):
             print("Please enter the details of the new student.")
             newEntry()
             
-        elif (sw=="D"):
+        elif (sw == "D"):
             delete(input("Please enter the ID of the row you want to delete: "))
             
-        elif (sw=="E"):
+        elif (sw == "E"):
             print("It's okay, we all make mistakes sometimes.")
-            row_to_edit=int(input("Which row would you like to edit? "))
-            lifechoices=input("Do you want to edit a specific [V]alue or a whole [R]ow? ").upper()
+            row_to_edit = int(input("Which row would you like to edit? "))
+            lifechoices = input("Do you want to edit a specific [V]alue or a whole [R]ow? ").upper()
             
-            if (lifechoices=="V"):
+            if (lifechoices == "V"):
                 editkey_value(row_to_edit)
                 
-            elif (lifechoices=="R"):
+            elif (lifechoices == "R"):
                 print("Let's enter all the new values, shall we?")
                 editkey_full(row_to_edit)
                 
-        elif (sw=="S"):
+        elif (sw == "S"):
             searchfunction()
             
-        elif (sw=="P"):
+        elif (sw == "P"):
             print_all()
                 
-        elif (sw=="C"):
+        elif (sw == "C"):
             classAvgs()
             
-        elif (sw=="EXIT"):
+        elif (sw == "EXIT"):
             break
     
 conn.close()
