@@ -71,7 +71,7 @@ def newEntry():
     student_attributes += (avg_grade,)
     
     
-    c.execute("INSERT INTO students(first_name, last_name, address, class, matg, scig, eng, dug, artg, sumg, avgg) VALUES (?,?,?,?,?,?,?,?,?,?,?)",student_attributes)
+    c.execute("INSERT INTO students(first_name, last_name, address, class, matg, scig, eng, dug, artg, sum, avg) VALUES (?,?,?,?,?,?,?,?,?,?,?)",student_attributes)
     conn.commit() 
 
 #Function to delete an entry from the database according to ROW ID
@@ -104,23 +104,23 @@ def editkey_value(i):
             value_of_attribute = "'"+str(value_of_attribute)+"'"
             c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
             conn.commit()
-            
+                     
+            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE rowid=%s" %(i))
+            results = c.fetchone()
             
             #Avg Calculator
             sum_grade = 0
-            for value in student_attributes[4:8]:
+            for value in results:
                 sum_grade += float(value)
-            
-            student_attributes += (sum_grade,)
             
             #Shows the sum of all grades and grade average to 1 d.p.
             avg_grade = sum_grade / 5.0
             
-            student_attributes += (avg_grade,)
             
-            c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
-                    
+            c.execute('UPDATE students SET sum=%s, avg=%s  WHERE rowid=%s' %(sum_grade,avg_grade,i))
+            conn.commit()                    
             break;
+            
         else:
             print("Invalid input. Please try again.")
 
@@ -156,7 +156,7 @@ def editkey_full(i):
     
     student_attributes += (str(i),)
     
-    c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=?, sumg=?, avgg=? WHERE rowid=?",student_attributes)
+    c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=?, sum=?, avg=? WHERE rowid=?",student_attributes)
     conn.commit()
 
 #Search Function!    
@@ -165,86 +165,43 @@ def searchfunction():
     
     
     if decision == "F":
-        student = input_checker(input("What is the first name of the student you are searching for?").upper(), "STRING")
+        student = input_checker(input("What is the first name of the student you are searching for? ").upper(), "STRING")
         c.execute("SELECT rowid,* FROM students WHERE first_name= '%s'" %(student))
         
         student_rows = (c.fetchall())
-        for student_row in student_rows:
-            
-            #This part is a little counterintuitive. Will explain in a bit
-            print(student_row)
-            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE first_name= '%s'" %(student))
-            results = c.fetchone()
         
-            #Avg Calculator
-            sum_grade = 0
-            for value in results:
-                sum_grade += float(value)
-
-            #Shows the sum of all grades and grade average to 1 d.p.
-            avg_grade = sum_grade / 5.0
-            print("Sum of all Grades: %.1f" % sum_grade)
-            print("Grade Average: %.1f" % avg_grade)
+        print(tabulate(student_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
         
         if student_rows == []:
             print("No Matching Records found.")
             
     #Last Name Search
     elif decision == "L":
-        student = input_checker(input("What is the last name of the student you are searching for?").upper(), "STRING")
+        student = input_checker(input("What is the last name of the student you are searching for? ").upper(), "STRING")
         c.execute("SELECT rowid,* FROM students WHERE last_name= '%s'" %(student))
         
         student_rows = (c.fetchall())
-        for student_row in student_rows:
-            
-            #This part is a little counterintuitive. Will explain in a bit
-            print(student_row)
-            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE last_name= '%s'" %(student))
-            results = c.fetchone()
         
-            #Avg Calculator
-            sum_grade = 0
-            for value in results:
-                sum_grade += float(value)
-
-            #Shows the sum of all grades and grade average to 1 d.p.
-            avg_grade = sum_grade / 5.0
-            print("Sum of all Grades: %.1f" % sum_grade)
-            print("Grade Average: %.1f" % avg_grade)
+        print(tabulate(student_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
         
         if student_rows == []:
             print("No Matching Records found.")
         
     #Row ID Search
     elif decision == "R":
-        student = input_checker(input("What is the Row ID of the student you are searching for?").upper(), "INTEGER")
+        student = input_checker(input("What is the Row ID of the student you are searching for? ").upper(), "INTEGER")
         c.execute("SELECT rowid, * FROM students WHERE rowid= '%s'" %(student))
         print(c.fetchone())
         c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE rowid= '%s'" %(student))
         
         student_rows = (c.fetchall())
-        for student_row in student_rows:
-            
-            #This part is a little counterintuitive. Will explain in a bit
-            print(student_row)
-            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE rowid= '%s'" %(student))
-            results = c.fetchone()
         
-            #Avg Calculator
-            sum_grade = 0
-            for value in results:
-                sum_grade += float(value)
-
-            #Shows the sum of all grades and grade average to 1 d.p.
-            avg_grade = sum_grade / 5.0
-            print("Sum of all Grades: %.1f" % sum_grade)
-            print("Grade Average: %.1f" % avg_grade)
-        
+        print(tabulate(student_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
+                
         if student_rows == []:
             print("No Matching Records found.")
    
 #Prints all Rows
-
 def print_all():
     print("Here are all the entries in our database:")
     c.execute('SELECT rowid, * FROM students')
