@@ -23,6 +23,10 @@ with the same last or first name? We should edit the code to show all entries th
 *Write the code more readable (spaces between symbols).
 *Use more descriptive variable names to make it more understandable and easier to follow.
 
+
+@samya List of Edits - Date: 22/02/2020
+*
+
 """
 
 #Import of libraries and setting up the sqlite commands
@@ -33,15 +37,9 @@ conn = sqlite3.connect('daba.db')
 c = conn.cursor()
 
 #Function to add a new entry to the database
-#QUESTION 1(JUD: Why can't we use 'student' or another word more descriptive instead of 'push', it is very confusing to read, at least for me)
-#QUESTION 2(JUD: Why so many interrogation marks in the commant of c.execute?)
-#Q1: we can change it, I just set it because the push variable stores the data that we are pushing to the SQL "server"
-#Q2: With those marks you can tell python that you want to insert some variables into a string, similar
-#       to write print("welcome home",name," today is ",nameofday) and it handles variables better I think
-
 def newEntry():
-    push = ()
-    push += (input("First Name: ").upper(),)
+    student_attributes = ()
+    student_attributes += (input("First Name: ").upper(),)
     push += (input("Last Name: ").upper(),)
     push += (input("Address: ").upper(),)
     push += (input("Class: ").upper(),)
@@ -85,7 +83,6 @@ def editkey_full(i):
     push += (input("Art grade: "),)
     push += (str(i),)
     
-    #Samya: Why is this edited in id as opposed to name, like the others? Abel: Because the name is not unique
     c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=? WHERE rowid=?",push)
     conn.commit()
 
@@ -93,44 +90,51 @@ def editkey_full(i):
 def searchfunction():
     decision = input("Search by [F]irst name, [L]ast name, or [R]ow ID? ").upper()
     
-    #First Name Search
-    #QUESTION: what is fetchone for? what does it do?)
-    #c.execute only tells the database what to look for, but it doesn't listen (as many people in our current world, sadly)
-    #c.fetchone is the one that listens to the reply (one line at a time), while c.fetchall gets every line
+    
     if decision == "F":
-        student = input("What is the first name of the student you are searching for?")
+        student = input("What is the first name of the student you are searching for?").upper()
         c.execute("SELECT rowid,* FROM students WHERE first_name= '%s'" %(student))
-        print(c.fetchone())
-        c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE first_name= '%s'" %(student))
-        results = c.fetchone()
         
-        #Avg Calculator
-        sum_grade = 0
-        for s in results:
-            sum_grade += float(s)
+        student_rows = (c.fetchall())
+        for student_row in student_rows:
+            
+            #This part is a little counterintuitive. Will explain in a bit
+            print(student_row)
+            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE first_name= '%s'" %(student))
+            results = c.fetchone()
+        
+            #Avg Calculator
+            sum_grade = 0
+            for value in results:
+                sum_grade += float(value)
 
-        #Shows the sum of all grades and grade average to 1 d.p.
-        avg_grade = sum_grade / 5.0
-        print("Sum of all Grades: %.1f" % sum_grade)
-        print("Grade Average: %.1f" % avg_grade)
+            #Shows the sum of all grades and grade average to 1 d.p.
+            avg_grade = sum_grade / 5.0
+            print("Sum of all Grades: %.1f" % sum_grade)
+            print("Grade Average: %.1f" % avg_grade)
         
     #Last Name Search
     elif decision == "L":
-        student = input("What is the last name of the student you are searching for?")
+        student = input("What is the last name of the student you are searching for?").upper()
         c.execute("SELECT rowid,* FROM students WHERE last_name= '%s'" %(student))
-        print(c.fetchone())
-        c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE last_name= '%s'" %(student))
-        results = c.fetchone()
         
-        #Avg Calculator
-        sum_grade = 0
-        for s in results:
-            sum_grade += float(s)
+        student_rows = (c.fetchall())
+        for student_row in student_rows:
+            
+            #This part is a little counterintuitive. Will explain in a bit
+            print(student_row)
+            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE last_name= '%s'" %(student))
+            results = c.fetchone()
+        
+            #Avg Calculator
+            sum_grade = 0
+            for value in results:
+                sum_grade += float(value)
 
-        #Shows the sum of all grades and grade average to 1 d.p.
-        avg_grade = sum_grade / 5.0
-        print("Sum of all Grades: %.1f" % sum_grade)
-        print("Grade Average: %.1f" % avg_grade)
+            #Shows the sum of all grades and grade average to 1 d.p.
+            avg_grade = sum_grade / 5.0
+            print("Sum of all Grades: %.1f" % sum_grade)
+            print("Grade Average: %.1f" % avg_grade)
         
     #Row ID Search
     elif decision == "R":
@@ -158,7 +162,6 @@ def searchfunction():
 def print_all():
     print("Here are all the entries in our database:")
     c.execute('SELECT rowid, * FROM students')
-    print(c.fetchone())
     all_rows = c.fetchall()
     for i in all_rows:
         print(i)
@@ -184,7 +187,6 @@ def classAvgs():
         for j in results:
 
             #Avg Calculator
-#for s in j....? can we call it differently?
 
             sum_grade = 0
             for s in j:
@@ -207,8 +209,6 @@ def classAvgs():
     #Apply inline formatting here as well, idk why is it not working for me, on it
     print("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
 
-def tryThis():
-    return("I work!")
 
 if __name__ == "__main__":
     while True:
