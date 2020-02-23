@@ -28,7 +28,7 @@ with the same last or first name? We should edit the code to show all entries th
 #Import of libraries and setting up the sqlite commands
 
 import sqlite3
-#import math
+
 conn = sqlite3.connect('daba.db')
 c = conn.cursor()
 
@@ -94,9 +94,9 @@ def searchfunction():
     decision = input("Search by [F]irst name, [L]ast name, or [R]ow ID? ").upper()
     
     #First Name Search
-#QUESTION: what is fetchone for? what does it do?)
-#c.execute only tells the database what to look for, but it doesn't listen (as many people in our current world, sadly)
-#c.fetchone is the one that listens to the reply (one line at a time), while c.fetchall gets every line
+    #QUESTION: what is fetchone for? what does it do?)
+    #c.execute only tells the database what to look for, but it doesn't listen (as many people in our current world, sadly)
+    #c.fetchone is the one that listens to the reply (one line at a time), while c.fetchall gets every line
     if decision == "F":
         student = input("What is the first name of the student you are searching for?")
         c.execute("SELECT rowid,* FROM students WHERE first_name= '%s'" %(student))
@@ -206,6 +206,9 @@ def classAvgs():
     
     #Apply inline formatting here as well, idk why is it not working for me, on it
     print("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
+
+def tryThis():
+    return("I work!")
 
 if __name__ == "__main__":
     while True:
