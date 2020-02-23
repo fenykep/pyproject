@@ -104,6 +104,22 @@ def editkey_value(i):
             value_of_attribute = "'"+str(value_of_attribute)+"'"
             c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
             conn.commit()
+            
+            
+            #Avg Calculator
+            sum_grade = 0
+            for value in student_attributes[4:8]:
+                sum_grade += float(value)
+            
+            student_attributes += (sum_grade,)
+            
+            #Shows the sum of all grades and grade average to 1 d.p.
+            avg_grade = sum_grade / 5.0
+            
+            student_attributes += (avg_grade,)
+            
+            c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
+                    
             break;
         else:
             print("Invalid input. Please try again.")
@@ -123,9 +139,24 @@ def editkey_full(i):
     student_attributes += (input_checker(input("English grade: ").upper(), "FLOAT"),)
     student_attributes += (input_checker(input("Dutch grade: ").upper(), "FLOAT"),)
     student_attributes += (input_checker(input("Art grade: ").upper(), "FLOAT"),)
+    
+    
+    #Avg Calculator
+    sum_grade = 0
+    for value in student_attributes[4:8]:
+        sum_grade += float(value)
+    
+    student_attributes += (sum_grade,)
+    
+    #Shows the sum of all grades and grade average to 1 d.p.
+    avg_grade = sum_grade / 5.0
+    
+    student_attributes += (avg_grade,)
+    
+    
     student_attributes += (str(i),)
     
-    c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=? WHERE rowid=?",student_attributes)
+    c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=?, sumg=?, avgg=? WHERE rowid=?",student_attributes)
     conn.commit()
 
 #Search Function!    
