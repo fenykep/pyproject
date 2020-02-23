@@ -7,9 +7,12 @@ def avgPrint():
 	messagebox.showinfo('BestClass',sdm.classAvgs())
 
 def donothing():
-   filewin = Toplevel(window)
-   button = Button(filewin, text="Do nothing button")
+   filewin = tk.Toplevel(window)
+   button = tk.Button(filewin, text="Do nothing button")
    button.pack()
+
+def erase():
+	sdm.delete()
 	
 
 class Window(tk.Tk):
@@ -74,3 +77,5 @@ class Window(tk.Tk):
 if __name__ == "__main__":
 	window = Window()
 	window.mainloop()
+
+
