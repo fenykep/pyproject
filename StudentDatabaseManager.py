@@ -32,16 +32,12 @@ import sqlite3
 conn = sqlite3.connect('daba.db')
 c = conn.cursor()
 
-"""
-Superimportant!! Somehow you have to either show the rowID or every time you remove a row, you have to update all the rowidS
-Samya: Solved it!
-
-"""
-
-
 #Function to add a new entry to the database
 #QUESTION 1(JUD: Why can't we use 'student' or another word more descriptive instead of 'push', it is very confusing to read, at least for me)
 #QUESTION 2(JUD: Why so many interrogation marks in the commant of c.execute?)
+#Q1: we can change it, I just set it because the push variable stores the data that we are pushing to the SQL "server"
+#Q2: With those marks you can tell python that you want to insert some variables into a string, similar
+#       to write print("welcome home",name," today is ",nameofday) and it handles variables better I think
 
 def newEntry():
     push = ()
@@ -206,12 +202,12 @@ def classAvgs():
             highest_class = i
             highest_class_avg = class_avg
     
-    
+    #Apply inline formatting here as well, idk why is it not working for me, on it
     print("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
 
 if __name__ == "__main__":
     while True:
-        sw = input("[A]dd, [D]elete, [E]dit, [S]earch, [C]lass Averages, [P]rint all - ").upper()
+        sw = input("[A]dd, [D]elete, [E]dit, [S]earch, [C]lass Averages, [P]rint all - ").upper() #+1 I didn't think of this :D 
     
         if (sw == "A"):
             print("Please enter the details of the new student.")
