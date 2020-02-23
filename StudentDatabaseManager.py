@@ -37,6 +37,7 @@ be able to end the script now is through the "exit" command or a hard restart of
 #Import of libraries and setting up the sqlite commands
 
 import sqlite3
+from tabulate import tabulate
 
 conn = sqlite3.connect('daba.db')
 c = conn.cursor()
@@ -55,7 +56,22 @@ def newEntry():
     student_attributes += (input_checker(input("English grade: ").upper(), "FLOAT"),)
     student_attributes += (input_checker(input("Dutch grade: ").upper(), "FLOAT"),)
     student_attributes += (input_checker(input("Art grade: ").upper(), "FLOAT"),)
-    c.execute("INSERT INTO students(first_name, last_name, address, class, matg, scig, eng, dug, artg) VALUES (?,?,?,?,?,?,?,?,?)",student_attributes)
+    
+
+    #Avg Calculator
+    sum_grade = 0
+    for value in student_attributes[4:8]:
+        sum_grade += float(value)
+    
+    student_attributes += (sum_grade)
+    
+    #Shows the sum of all grades and grade average to 1 d.p.
+    avg_grade = sum_grade / 5.0
+    
+    student_attributes += (avg_grade)
+    
+    
+    c.execute("INSERT INTO students(first_name, last_name, address, class, matg, scig, eng, dug, artg, sumg, avgg) VALUES (?,?,?,?,?,?,?,?,?,?,?)",student_attributes)
     conn.commit() 
 
 #Function to delete an entry from the database according to ROW ID
@@ -83,7 +99,7 @@ def editkey_value(i):
             c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
             conn.commit()
             break;
-        elif type_of_attribute in valid_types[5:9]:
+        elif type_of_attribute in valid_types[4:9]:
             value_of_attribute = input_checker(input("Please enter the new value. ").upper(), "FLOAT")
             value_of_attribute = "'"+str(value_of_attribute)+"'"
             c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
@@ -202,8 +218,8 @@ def print_all():
     print("Here are all the entries in our database:")
     c.execute('SELECT rowid, * FROM students')
     all_rows = c.fetchall()
-    for i in all_rows:
-        print(i)
+    
+    print(tabulate(all_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade']))
 
 def classAvgs():
     #This first part finds all student classes that exist in the database
