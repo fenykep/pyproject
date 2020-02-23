@@ -26,12 +26,10 @@ with the same last or first name? We should edit the code to show all entries th
 """
 
 #Import of libraries and setting up the sqlite commands
-
 import sqlite3
 
 conn = sqlite3.connect('daba.db')
 c = conn.cursor()
-
 #Function to add a new entry to the database
 #QUESTION 1(JUD: Why can't we use 'student' or another word more descriptive instead of 'push', it is very confusing to read, at least for me)
 #QUESTION 2(JUD: Why so many interrogation marks in the commant of c.execute?)
@@ -164,6 +162,11 @@ def print_all():
         print(i)
 
 def classAvgs():
+    #!! Tell the code to connect to the DB when SDM.py is called, 
+    conn = sqlite3.connect('daba.db')
+    c = conn.cursor()
+    #   so we dont have to do this in every function
+
     #This first part finds all student classes that exist in the database
     classes = []
     c.execute("SELECT class FROM students")
@@ -184,8 +187,6 @@ def classAvgs():
         for j in results:
 
             #Avg Calculator
-#for s in j....? can we call it differently?
-
             sum_grade = 0
             for s in j:
                 sum_grade += float(s)
@@ -204,13 +205,12 @@ def classAvgs():
             highest_class = i
             highest_class_avg = class_avg
     
-    #Apply inline formatting here as well, idk why is it not working for me, on it
-    print("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
+    #Apply inline formatting here as well, idk why is it not working for me, am on it
+    return("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
 
-def tryThis():
-    return("I work!")
 
 if __name__ == "__main__":
+    
     while True:
         sw = input("[A]dd, [D]elete, [E]dit, [S]earch, [C]lass Averages, [P]rint all - ").upper() #+1 I didn't think of this :D 
     
