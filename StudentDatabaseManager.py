@@ -20,9 +20,18 @@ To do -
 with the same last or first name? We should edit the code to show all entries that have a specific last name or first name
 * Waiting for the extra challenges from Mr Amin!
 
-*Write the code more readable (spaces between symbols).
-*Use more descriptive variable names to make it more understandable and easier to follow.
+* Write the code more readable (spaces between symbols).
+* Use more descriptive variable names to make it more understandable and easier to follow.
 
+
+@samya List of Edits - Date: 22/02/2020
+
+* Have added a validation checker for inputs! This is multifuctional tool that can be used in all your programs!
+Simply put in the value to be checked, followed by which criterion it should be submitted to (Either FLOAT, INTEGER
+or STRING) (e.g (input_to_be_checked, "INTEGER"))
+* Have removed basically all crash possibilities/bugs within the program. Theoretically, the only way you should
+be able to end the script now is through the "exit" command or a hard restart of the kernel.
+* A few lines of code have been moved around to make the GUI/CL integration smoother and easier
 """
 
 #Import of libraries and setting up the sqlite commands
@@ -33,24 +42,20 @@ conn = sqlite3.connect('daba.db')
 c = conn.cursor()
 
 #Function to add a new entry to the database
-#QUESTION 1(JUD: Why can't we use 'student' or another word more descriptive instead of 'push', it is very confusing to read, at least for me)
-#QUESTION 2(JUD: Why so many interrogation marks in the commant of c.execute?)
-#Q1: we can change it, I just set it because the push variable stores the data that we are pushing to the SQL "server"
-#Q2: With those marks you can tell python that you want to insert some variables into a string, similar
-#       to write print("welcome home",name," today is ",nameofday) and it handles variables better I think
-
 def newEntry():
-    push = ()
-    push += (input("First Name: ").upper(),)
-    push += (input("Last Name: ").upper(),)
-    push += (input("Address: ").upper(),)
-    push += (input("Class: ").upper(),)
-    push += (input("Mathematics grade: "),)
-    push += (input("Science grade: "),)
-    push += (input("English grade: "),)
-    push += (input("Dutch grade: "),)
-    push += (input("Art grade: "),)
-    c.execute("INSERT INTO students(first_name, last_name, address, class, matg, scig, eng, dug, artg) VALUES (?,?,?,?,?,?,?,?,?)",push)
+    print("Please enter the details of the new student.")
+    
+    student_attributes = ()
+    student_attributes += (input_checker(input("First name: ").upper(), "STRING"),)
+    student_attributes += (input_checker(input("Last name: ").upper(), "STRING"),)
+    student_attributes += (input_checker(input("Address: ").upper(), "STRING"),)
+    student_attributes += (input_checker(input("Class: ").upper(), "STRING"),)
+    student_attributes += (input_checker(input("Mathematics grade: ").upper(), "FLOAT"),)
+    student_attributes += (input_checker(input("Science grade: ").upper(), "FLOAT"),)
+    student_attributes += (input_checker(input("English grade: ").upper(), "FLOAT"),)
+    student_attributes += (input_checker(input("Dutch grade: ").upper(), "FLOAT"),)
+    student_attributes += (input_checker(input("Art grade: ").upper(), "FLOAT"),)
+    c.execute("INSERT INTO students(first_name, last_name, address, class, matg, scig, eng, dug, artg) VALUES (?,?,?,?,?,?,?,?,?)",student_attributes)
     conn.commit() 
 
 #Function to delete an entry from the database according to ROW ID
@@ -64,101 +69,138 @@ def delete(x):
 
 #Function to edit a specific value on a row
 def editkey_value(i):
-    print("first_name last_name address class matg scig eng dug artg")
-    type_of_attribute = input("Which one? ").lower()
-    value_of_attribute = input("Please enter the new value. ").upper()
-    value_of_attribute = "'"+value_of_attribute+"'"
-    c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
-    conn.commit()
+    
+    valid_types = ["first_name", "last_name", "address", "class", "matg" ,"scig", "eng", "dug", "artg"]
+    
+    while True:
+        print("first_name last_name address class matg scig eng dug artg")  
+        
+        type_of_attribute = input("Which one? ").lower()
+        
+        if type_of_attribute in valid_types[0:4] :
+            value_of_attribute = input_checker(input("Please enter the new value. ").upper(), "STRING")
+            value_of_attribute = "'"+value_of_attribute+"'"
+            c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
+            conn.commit()
+            break;
+        elif type_of_attribute in valid_types[5:9]:
+            value_of_attribute = input_checker(input("Please enter the new value. ").upper(), "FLOAT")
+            value_of_attribute = "'"+str(value_of_attribute)+"'"
+            c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
+            conn.commit()
+            break;
+        else:
+            print("Invalid input. Please try again.")
 
 #Function to completely replace a row
 def editkey_full(i):
-    push = ()
-    push += (input("First Name: ").upper(),)
-    push += (input("Last Name: ").upper(),)
-    push += (input("Address: ").upper(),)
-    push += (input("Class: ").upper(),)
-    push += (input("Mathematics grade: "),)
-    push += (input("Science grade: "),)
-    push += (input("English grade: "),)
-    push += (input("Dutch grade: "),)
-    push += (input("Art grade: "),)
-    push += (str(i),)
+    print("Let's enter all the new values, shall we?")
     
-    #Samya: Why is this edited in id as opposed to name, like the others? Abel: Because the name is not unique
-    c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=? WHERE rowid=?",push)
+    student_attributes = ()
+    
+    student_attributes += (input_checker(input("First name: ").upper(), "STRING"),)
+    student_attributes += (input_checker(input("Last name: ").upper(), "STRING"),)
+    student_attributes += (input_checker(input("Address: ").upper(), "STRING"),)
+    student_attributes += (input_checker(input("Class: ").upper(), "STRING"),)
+    student_attributes += (input_checker(input("Mathematics grade: ").upper(), "FLOAT"),)
+    student_attributes += (input_checker(input("Science grade: ").upper(), "FLOAT"),)
+    student_attributes += (input_checker(input("English grade: ").upper(), "FLOAT"),)
+    student_attributes += (input_checker(input("Dutch grade: ").upper(), "FLOAT"),)
+    student_attributes += (input_checker(input("Art grade: ").upper(), "FLOAT"),)
+    student_attributes += (str(i),)
+    
+    c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=? WHERE rowid=?",student_attributes)
     conn.commit()
 
 #Search Function!    
 def searchfunction():
     decision = input("Search by [F]irst name, [L]ast name, or [R]ow ID? ").upper()
     
-    #First Name Search
-    #QUESTION: what is fetchone for? what does it do?)
-    #c.execute only tells the database what to look for, but it doesn't listen (as many people in our current world, sadly)
-    #c.fetchone is the one that listens to the reply (one line at a time), while c.fetchall gets every line
+    
     if decision == "F":
-        student = input("What is the first name of the student you are searching for?")
+        student = input_checker(input("What is the first name of the student you are searching for?").upper(), "STRING")
         c.execute("SELECT rowid,* FROM students WHERE first_name= '%s'" %(student))
-        print(c.fetchone())
-        c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE first_name= '%s'" %(student))
-        results = c.fetchone()
         
-        #Avg Calculator
-        sum_grade = 0
-        for s in results:
-            sum_grade += float(s)
+        student_rows = (c.fetchall())
+        for student_row in student_rows:
+            
+            #This part is a little counterintuitive. Will explain in a bit
+            print(student_row)
+            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE first_name= '%s'" %(student))
+            results = c.fetchone()
+        
+            #Avg Calculator
+            sum_grade = 0
+            for value in results:
+                sum_grade += float(value)
 
-        #Shows the sum of all grades and grade average to 1 d.p.
-        avg_grade = sum_grade / 5.0
-        print("Sum of all Grades: %.1f" % sum_grade)
-        print("Grade Average: %.1f" % avg_grade)
+            #Shows the sum of all grades and grade average to 1 d.p.
+            avg_grade = sum_grade / 5.0
+            print("Sum of all Grades: %.1f" % sum_grade)
+            print("Grade Average: %.1f" % avg_grade)
         
+        if student_rows == []:
+            print("No Matching Records found.")
+            
     #Last Name Search
     elif decision == "L":
-        student = input("What is the last name of the student you are searching for?")
+        student = input_checker(input("What is the last name of the student you are searching for?").upper(), "STRING")
         c.execute("SELECT rowid,* FROM students WHERE last_name= '%s'" %(student))
-        print(c.fetchone())
-        c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE last_name= '%s'" %(student))
-        results = c.fetchone()
         
-        #Avg Calculator
-        sum_grade = 0
-        for s in results:
-            sum_grade += float(s)
+        student_rows = (c.fetchall())
+        for student_row in student_rows:
+            
+            #This part is a little counterintuitive. Will explain in a bit
+            print(student_row)
+            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE last_name= '%s'" %(student))
+            results = c.fetchone()
+        
+            #Avg Calculator
+            sum_grade = 0
+            for value in results:
+                sum_grade += float(value)
 
-        #Shows the sum of all grades and grade average to 1 d.p.
-        avg_grade = sum_grade / 5.0
-        print("Sum of all Grades: %.1f" % sum_grade)
-        print("Grade Average: %.1f" % avg_grade)
+            #Shows the sum of all grades and grade average to 1 d.p.
+            avg_grade = sum_grade / 5.0
+            print("Sum of all Grades: %.1f" % sum_grade)
+            print("Grade Average: %.1f" % avg_grade)
+        
+        if student_rows == []:
+            print("No Matching Records found.")
         
     #Row ID Search
     elif decision == "R":
-        student = input("What is the Row ID of the student you are searching for?")
+        student = input_checker(input("What is the Row ID of the student you are searching for?").upper(), "INTEGER")
         c.execute("SELECT rowid, * FROM students WHERE rowid= '%s'" %(student))
         print(c.fetchone())
         c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE rowid= '%s'" %(student))
-        results = c.fetchone()
         
-        #Avg Calculator
-        sum_grade = 0
-        for s in results:
-            sum_grade += float(s)
+        student_rows = (c.fetchall())
+        for student_row in student_rows:
+            
+            #This part is a little counterintuitive. Will explain in a bit
+            print(student_row)
+            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE rowid= '%s'" %(student))
+            results = c.fetchone()
+        
+            #Avg Calculator
+            sum_grade = 0
+            for value in results:
+                sum_grade += float(value)
 
-        #Shows the sum of all grades and grade average to 1 d.p.
-        avg_grade = sum_grade / 5.0
-        print("Sum of all Grades: %.1f" % sum_grade)
-        print("Grade Average: %.1f" % avg_grade)
+            #Shows the sum of all grades and grade average to 1 d.p.
+            avg_grade = sum_grade / 5.0
+            print("Sum of all Grades: %.1f" % sum_grade)
+            print("Grade Average: %.1f" % avg_grade)
         
-    else:
-        print("Invalid Input.")
+        if student_rows == []:
+            print("No Matching Records found.")
    
 #Prints all Rows
 
 def print_all():
     print("Here are all the entries in our database:")
     c.execute('SELECT rowid, * FROM students')
-    print(c.fetchone())
     all_rows = c.fetchall()
     for i in all_rows:
         print(i)
@@ -176,19 +218,17 @@ def classAvgs():
             
     #This part now calculates average per class, then outputs it and also checks for highest average
     highest_class_avg = 0
-    for i in classes:
-        c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE class= '%s'" %(i))
+    for student_class in classes:
+        c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE class= '%s'" %(student_class))
         results = c.fetchall()
         
         class_total = 0
-        for j in results:
+        for grade_list in results:
 
             #Avg Calculator
-#for s in j....? can we call it differently?
-
             sum_grade = 0
-            for s in j:
-                sum_grade += float(s)
+            for grade_value in grade_list:
+                sum_grade += float(grade_value)
     
             #Calculates the student grade average and adds it to the class total
             avg_grade = sum_grade/5.0
@@ -197,41 +237,70 @@ def classAvgs():
         class_avg = round(class_total/len(results),1)
         
         #Print Class Average
-        print( i,"Average Score: " + str(class_avg))
+        print( student_class,"Average Score: " + str(class_avg))
             
         #Calculate if current class avg is higher than highest class avg, and replace it if it is
         if class_avg > highest_class_avg:
-            highest_class = i
+            highest_class = student_class
             highest_class_avg = class_avg
     
     #Apply inline formatting here as well, idk why is it not working for me, on it
     print("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
 
-def tryThis():
-    return("I work!")
+
+#Validation checker! Multifunctional tool, so make good use of it!
+def input_checker(user_input, input_type):
+    while True:
+        if input_type == "INTEGER":
+            try:
+                user_input = int(user_input)
+                return (user_input)
+            except ValueError:
+                user_input = input("This is an invalid input. Please try again: ")
+                
+        elif input_type == "FLOAT":
+            try:
+                user_input = float(user_input)
+                return (user_input)
+            except ValueError:
+                user_input = input("This is an invalid input. Please try again: ")
+                
+        elif input_type == "STRING":
+            try:
+               user_input = int(user_input)
+               user_input = input("This is an invalid input. Please try again: ")
+            except ValueError:
+              try:
+                user_input = float(user_input)
+                user_input = input("This is an invalid input. Please try again: ")
+              except ValueError:
+                  return (user_input)
 
 if __name__ == "__main__":
     while True:
         sw = input("[A]dd, [D]elete, [E]dit, [S]earch, [C]lass Averages, [P]rint all - ").upper() #+1 I didn't think of this :D 
     
         if (sw == "A"):
-            print("Please enter the details of the new student.")
             newEntry()
             
         elif (sw == "D"):
-            delete(input("Please enter the ID of the row you want to delete: "))
+            delete(input_checker(input("Please enter the ID of the row you want to delete: "), "INTEGER"))
             
         elif (sw == "E"):
             print("It's okay, we all make mistakes sometimes.")
-            row_to_edit = int(input("Which row would you like to edit? "))
+            row_to_edit = int(input_checker(input("Which row would you like to edit? "), "INTEGER"))
             lifechoices = input("Do you want to edit a specific [V]alue or a whole [R]ow? ").upper()
             
-            if (lifechoices == "V"):
-                editkey_value(row_to_edit)
-                
-            elif (lifechoices == "R"):
-                print("Let's enter all the new values, shall we?")
-                editkey_full(row_to_edit)
+            while True:
+                if (lifechoices == "V"):
+                    editkey_value(row_to_edit)
+                    break;
+                    
+                elif (lifechoices == "R"):
+                    editkey_full(row_to_edit)
+                    break;
+                else:
+                    lifechoices = input("Invalid Input. Please try again: ").upper()
                 
         elif (sw == "S"):
             searchfunction()
@@ -244,5 +313,8 @@ if __name__ == "__main__":
             
         elif (sw == "EXIT"):
             break
+        
+        else:
+            print("Invalid input. Please try again.")
     
 conn.close()
