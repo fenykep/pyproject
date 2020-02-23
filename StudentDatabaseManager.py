@@ -187,7 +187,6 @@ def classAvgs():
         for j in results:
 
             #Avg Calculator
-#for s in j....? can we call it differently?
 
             sum_grade = 0
             for s in j:
@@ -210,8 +209,6 @@ def classAvgs():
     #Apply inline formatting here as well, idk why is it not working for me, on it
     print("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
 
-def tryThis():
-    return("I work!")
 
 if __name__ == "__main__":
     while True:
