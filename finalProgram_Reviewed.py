@@ -16,6 +16,8 @@
 To do - 
 
 * We still get an error message and ungraceful exit whenever there's a wrong input in various cases - We should fix this
+* Whenever we search for a record using the search function we always get one result back, but what if there are multiple people
+with the same last or first name? We should edit the code to show all entries that have a specific last name or first name
 * Waiting for the extra challenges from Mr Amin!
     
 
