@@ -13,6 +13,7 @@ def donothing():
 
 def erase():
 	sdm.delete()
+
 	
 
 class Window(tk.Tk):
@@ -20,29 +21,35 @@ class Window(tk.Tk):
 	def __init__(self):
 		super().__init__()
 		#self.arg = arg
-
+		'''
 		self.canvas = tk.Canvas(self)
 		self.frame = tk.Frame(self.canvas)
 		#self.tframe = tk.Frame(self)
 		self.scrollbar = tk.Scrollbar(self.canvas,orient="vertical", command=self.canvas.yview)
 		self.canvas.configure(yscrollcommand=self.scrollbar.set)
-		
+		'''
 		self.title("Student Database Manager® 2020")
-		self.geometry('800x600')
+		self.geometry('1200x600')
+		#Here I have put a label that is tabulated according to
+		#the database
+		self.lb1 = tk.Listbox(self,width=140, height=20)
+		self.lb1.grid(row=0, column=0)
+		self.yscroll = tk.Scrollbar(command=self.lb1.yview, orient=tk.VERTICAL)
+		self.yscroll.grid(row=0, column=1,sticky=tk.N+tk.S)
+		self.lb1.configure(yscrollcommand=self.yscroll.set)
+		for i in range(3):
+			self.lb1.insert(i,sdm.print_all("gui")[1])
+
+		'''
+		self.lbcont= tk.Listbox(self.frame)
+		self.lbcont.insert(1,"John Doe")
+		self.lbcont.pack(side=tk.TOP, fill=tk.BOTH,expand=1)
+
 		self.canvas.pack(side=tk.TOP, fill=tk.BOTH,expand=1)
 		self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 		self.canvas_frame = self.canvas.create_window((0, 0), window=self.frame, anchor="n")
-		
-		self.mylist = self.tk.listbox(window, yscrollcommand= scrollbar.set)
-
 		'''
 		
-		data = self.cur.execute("SELECT * FROM students")
-		datak = self.cur.fetchall()
-		for i in all_rows:
-			print(i)
-		'''
-
 		#shall we convert this to object-oriented as well? 
 		#Anyways these lines just create the menubar
 		menubar=tk.Menu(self)
@@ -66,39 +73,16 @@ class Window(tk.Tk):
 		menubar.add_cascade(label="Entry", menu=fmenu)
 		self.config(menu=menubar)
 		#until this
-
+		'''
 		#This handles the crossplatform mouse scrolling, bc apparantely different OSs handle it differently
 		self.bind_all("<MouseWheel>", self.mouse_scroll)
 		self.bind_all("<Button-4>", self.mouse_scroll)
 		self.bind_all("<Button-5>", self.mouse_scroll)
-        
+        '''
+	
 
-	#this is the function for the mousescroll
-	def mouse_scroll(self, event):
-	        if event.delta:
-	            self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-	        else:
-	            if event.num == 5:
-	                move = 1
-	            else:
-	                move = -1
 
-	            self.canvas.yview_scroll(move, "units")
 
 if __name__ == "__main__":
 	window = Window()
 	window.mainloop()
-
-'''
-def showallrecords(self):
-		data = self.readfromdatabase()
-		for index, dat in enumerate(data):
-			for k in range(10):
-				Label(self.master, text=dat[k].grid(row=index+1, column=k))
-			
-
-def readfromdatabase(self):
-    self.cur.execute("SELECT * FROM students")
-    return self.cur.fetchall()
-
-'''

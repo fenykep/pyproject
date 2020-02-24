@@ -37,7 +37,7 @@ if __name__ == "__main__":
             sdb.searchfunction()
             
         elif (sw == "P"):
-            sdb.print_all()
+            sdb.print_all("cl")
                 
         elif (sw == "C"):
             print(sdb.classAvgs())
