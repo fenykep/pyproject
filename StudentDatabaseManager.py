@@ -24,7 +24,7 @@ with the same last or first name? We should edit the code to show all entries th
 * Use more descriptive variable names to make it more understandable and easier to follow.
 
 
-@samya List of Edits - Date: 22/02/2020
+@samya List of Edits - Date: 24/02/2020
 
 * Have added a validation checker for inputs! This is multifuctional tool that can be used in all your programs!
 Simply put in the value to be checked, followed by which criterion it should be submitted to (Either FLOAT, INTEGER
@@ -32,6 +32,7 @@ or STRING) (e.g (input_to_be_checked, "INTEGER"))
 * Have removed basically all crash possibilities/bugs within the program. Theoretically, the only way you should
 be able to end the script now is through the "exit" command or a hard restart of the kernel.
 * A few lines of code have been moved around to make the GUI/CL integration smoother and easier
+* Made the main code redundant and moved it over to the cl.py file
 """
 
 #Import of libraries and setting up the sqlite commands
@@ -39,11 +40,12 @@ be able to end the script now is through the "exit" command or a hard restart of
 import sqlite3
 from tabulate import tabulate
 
-conn = sqlite3.connect('daba.db')
-c = conn.cursor()
-
 #Function to add a new entry to the database
 def newEntry():
+    
+    conn = sqlite3.connect('daba.db')
+    c = conn.cursor()
+    
     print("Please enter the details of the new student.")
     
     student_attributes = ()
@@ -71,20 +73,31 @@ def newEntry():
     student_attributes += (avg_grade,)
     
     
-    c.execute("INSERT INTO students(first_name, last_name, address, class, matg, scig, eng, dug, artg, sumg, avgg) VALUES (?,?,?,?,?,?,?,?,?,?,?)",student_attributes)
+    c.execute("INSERT INTO students(first_name, last_name, address, class, matg, scig, eng, dug, artg, sum, avg) VALUES (?,?,?,?,?,?,?,?,?,?,?)",student_attributes)
     conn.commit() 
+    
+    conn.close()
 
 #Function to delete an entry from the database according to ROW ID
 def delete(x):
+    
+    conn = sqlite3.connect('daba.db')
+    c = conn.cursor()
+
     c.execute("DELETE FROM students WHERE rowid=?",str(x)) 
     conn.commit()
     print("Record deleted successfully ")
     
     c.execute("VACUUM")
     conn.commit()
+    
+    conn.close()
 
 #Function to edit a specific value on a row
 def editkey_value(i):
+   
+    conn = sqlite3.connect('daba.db')
+    c = conn.cursor()
     
     valid_types = ["first_name", "last_name", "address", "class", "matg" ,"scig", "eng", "dug", "artg"]
     
@@ -104,12 +117,34 @@ def editkey_value(i):
             value_of_attribute = "'"+str(value_of_attribute)+"'"
             c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
             conn.commit()
+                     
+            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE rowid=%s" %(i))
+            results = c.fetchone()
+            
+            #Avg Calculator
+            sum_grade = 0
+            for value in results:
+                sum_grade += float(value)
+            
+            #Shows the sum of all grades and grade average to 1 d.p.
+            avg_grade = sum_grade / 5.0
+            
+            
+            c.execute('UPDATE students SET sum=%s, avg=%s  WHERE rowid=%s' %(sum_grade,avg_grade,i))
+            conn.commit()                    
             break;
+            
         else:
             print("Invalid input. Please try again.")
+        
+    conn.close()
 
 #Function to completely replace a row
 def editkey_full(i):
+    
+    conn = sqlite3.connect('daba.db')
+    c = conn.cursor()
+    
     print("Let's enter all the new values, shall we?")
     
     student_attributes = ()
@@ -123,105 +158,93 @@ def editkey_full(i):
     student_attributes += (input_checker(input("English grade: ").upper(), "FLOAT"),)
     student_attributes += (input_checker(input("Dutch grade: ").upper(), "FLOAT"),)
     student_attributes += (input_checker(input("Art grade: ").upper(), "FLOAT"),)
+    
+    
+    #Avg Calculator
+    sum_grade = 0
+    for value in student_attributes[4:8]:
+        sum_grade += float(value)
+    
+    student_attributes += (sum_grade,)
+    
+    #Shows the sum of all grades and grade average to 1 d.p.
+    avg_grade = sum_grade / 5.0
+    
+    student_attributes += (avg_grade,)
+    
+    
     student_attributes += (str(i),)
     
-    c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=? WHERE rowid=?",student_attributes)
+    c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=?, sum=?, avg=? WHERE rowid=?",student_attributes)
     conn.commit()
+    
+    conn.close()
 
 #Search Function!    
 def searchfunction():
+    
+    conn = sqlite3.connect('daba.db')
+    c = conn.cursor()
+    
     decision = input("Search by [F]irst name, [L]ast name, or [R]ow ID? ").upper()
     
     
     if decision == "F":
-        student = input_checker(input("What is the first name of the student you are searching for?").upper(), "STRING")
+        student = input_checker(input("What is the first name of the student you are searching for? ").upper(), "STRING")
         c.execute("SELECT rowid,* FROM students WHERE first_name= '%s'" %(student))
         
         student_rows = (c.fetchall())
-        for student_row in student_rows:
-            
-            #This part is a little counterintuitive. Will explain in a bit
-            print(student_row)
-            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE first_name= '%s'" %(student))
-            results = c.fetchone()
         
-            #Avg Calculator
-            sum_grade = 0
-            for value in results:
-                sum_grade += float(value)
-
-            #Shows the sum of all grades and grade average to 1 d.p.
-            avg_grade = sum_grade / 5.0
-            print("Sum of all Grades: %.1f" % sum_grade)
-            print("Grade Average: %.1f" % avg_grade)
+        print(tabulate(student_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
         
         if student_rows == []:
             print("No Matching Records found.")
             
     #Last Name Search
     elif decision == "L":
-        student = input_checker(input("What is the last name of the student you are searching for?").upper(), "STRING")
+        student = input_checker(input("What is the last name of the student you are searching for? ").upper(), "STRING")
         c.execute("SELECT rowid,* FROM students WHERE last_name= '%s'" %(student))
         
         student_rows = (c.fetchall())
-        for student_row in student_rows:
-            
-            #This part is a little counterintuitive. Will explain in a bit
-            print(student_row)
-            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE last_name= '%s'" %(student))
-            results = c.fetchone()
         
-            #Avg Calculator
-            sum_grade = 0
-            for value in results:
-                sum_grade += float(value)
-
-            #Shows the sum of all grades and grade average to 1 d.p.
-            avg_grade = sum_grade / 5.0
-            print("Sum of all Grades: %.1f" % sum_grade)
-            print("Grade Average: %.1f" % avg_grade)
+        print(tabulate(student_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
         
         if student_rows == []:
             print("No Matching Records found.")
         
     #Row ID Search
     elif decision == "R":
-        student = input_checker(input("What is the Row ID of the student you are searching for?").upper(), "INTEGER")
+        student = input_checker(input("What is the Row ID of the student you are searching for? ").upper(), "INTEGER")
         c.execute("SELECT rowid, * FROM students WHERE rowid= '%s'" %(student))
-        print(c.fetchone())
-        c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE rowid= '%s'" %(student))
         
         student_rows = (c.fetchall())
-        for student_row in student_rows:
-            
-            #This part is a little counterintuitive. Will explain in a bit
-            print(student_row)
-            c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE rowid= '%s'" %(student))
-            results = c.fetchone()
         
-            #Avg Calculator
-            sum_grade = 0
-            for value in results:
-                sum_grade += float(value)
-
-            #Shows the sum of all grades and grade average to 1 d.p.
-            avg_grade = sum_grade / 5.0
-            print("Sum of all Grades: %.1f" % sum_grade)
-            print("Grade Average: %.1f" % avg_grade)
-        
+        print(tabulate(student_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
+                
         if student_rows == []:
             print("No Matching Records found.")
    
+    conn.close()
+    
 #Prints all Rows
-
 def print_all():
+    
+    conn = sqlite3.connect('daba.db')
+    c = conn.cursor()
+    
     print("Here are all the entries in our database:")
     c.execute('SELECT rowid, * FROM students')
     all_rows = c.fetchall()
     
     print(tabulate(all_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
+    
+    conn.close()
 
 def classAvgs():
+    
+    conn = sqlite3.connect('daba.db')
+    c = conn.cursor()
+    
     #This first part finds all student classes that exist in the database
     classes = []
     c.execute("SELECT class FROM students")
@@ -262,6 +285,8 @@ def classAvgs():
     
     #Apply inline formatting here as well, idk why is it not working for me, on it
     print("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
+    
+    conn.close()
 
 
 #Validation checker! Multifunctional tool, so make good use of it!
@@ -291,6 +316,11 @@ def input_checker(user_input, input_type):
                 user_input = input("This is an invalid input. Please try again: ")
               except ValueError:
                   return (user_input)
+              
+                
+"""
+REDUNDANT MAIN CODE
+
 
 if __name__ == "__main__":
     while True:
@@ -332,5 +362,5 @@ if __name__ == "__main__":
         
         else:
             print("Invalid input. Please try again.")
-    
-conn.close()
+
+"""
