@@ -26,21 +26,25 @@ class Window(tk.Tk):
 		#self.tframe = tk.Frame(self)
 		self.scrollbar = tk.Scrollbar(self.canvas,orient="vertical", command=self.canvas.yview)
 		self.canvas.configure(yscrollcommand=self.scrollbar.set)
-			
+		
 		self.title("Student Database Manager® 2020")
 		self.geometry('800x600')
 		self.canvas.pack(side=tk.TOP, fill=tk.BOTH,expand=1)
 		self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 		self.canvas_frame = self.canvas.create_window((0, 0), window=self.frame, anchor="n")
-		'''
+		
 		self.mylist = self.tk.listbox(window, yscrollcommand= scrollbar.set)
+
+		'''
+		
 		data = self.cur.execute("SELECT * FROM students")
 		datak = self.cur.fetchall()
 		for i in all_rows:
 			print(i)
 		'''
 
-		#shall we convert this to object-oriented as well?
+		#shall we convert this to object-oriented as well? 
+		#Anyways these lines just create the menubar
 		menubar=tk.Menu(self)
 		smenu=tk.Menu(menubar, tearoff=0)
 
@@ -69,7 +73,7 @@ class Window(tk.Tk):
 		self.bind_all("<Button-5>", self.mouse_scroll)
         
 
-
+	#this is the function for the mousescroll
 	def mouse_scroll(self, event):
 	        if event.delta:
 	            self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")

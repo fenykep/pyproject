@@ -284,7 +284,7 @@ def classAvgs():
             highest_class_avg = class_avg
     
     #Apply inline formatting here as well, idk why is it not working for me, on it
-    print("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
+    return("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
     
     conn.close()
 

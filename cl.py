@@ -40,9 +40,9 @@ if __name__ == "__main__":
             sdb.print_all()
                 
         elif (sw == "C"):
-            sdb.classAvgs()
+            print(sdb.classAvgs())
             
-        elif (sw == "EXIT"):
+        elif (sw == "EXIT" or sw == "EXIT()"):
             break
         
         else:
