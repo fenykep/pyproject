@@ -7,9 +7,12 @@ def avgPrint():
 	messagebox.showinfo('BestClass',sdm.classAvgs())
 
 def donothing():
-   filewin = Toplevel(window)
-   button = Button(filewin, text="Do nothing button")
+   filewin = tk.Toplevel(window)
+   button = tk.Button(filewin, text="Do nothing button")
    button.pack()
+
+def erase():
+	sdm.delete()
 	
 
 class Window(tk.Tk):
@@ -29,7 +32,14 @@ class Window(tk.Tk):
 		self.canvas.pack(side=tk.TOP, fill=tk.BOTH,expand=1)
 		self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 		self.canvas_frame = self.canvas.create_window((0, 0), window=self.frame, anchor="n")
-        
+		'''
+		self.mylist = self.tk.listbox(window, yscrollcommand= scrollbar.set)
+		data = self.cur.execute("SELECT * FROM students")
+		datak = self.cur.fetchall()
+		for i in all_rows:
+			print(i)
+		'''
+
 		#shall we convert this to object-oriented as well?
 		menubar=tk.Menu(self)
 		smenu=tk.Menu(menubar, tearoff=0)
@@ -74,3 +84,17 @@ class Window(tk.Tk):
 if __name__ == "__main__":
 	window = Window()
 	window.mainloop()
+
+'''
+def showallrecords(self):
+		data = self.readfromdatabase()
+		for index, dat in enumerate(data):
+			for k in range(10):
+				Label(self.master, text=dat[k].grid(row=index+1, column=k))
+			
+
+def readfromdatabase(self):
+    self.cur.execute("SELECT * FROM students")
+    return self.cur.fetchall()
+
+'''
