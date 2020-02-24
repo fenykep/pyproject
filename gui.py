@@ -29,28 +29,20 @@ class Window(tk.Tk):
 		self.canvas.configure(yscrollcommand=self.scrollbar.set)
 		'''
 		self.title("Student Database Manager® 2020")
-		self.geometry('1200x600')
+		self.geometry('500x600')
 		#Here I have put a label that is tabulated according to
 		#the database
-		self.lb1 = tk.Listbox(self,width=140, height=20)
+		self.lb1 = tk.Listbox(self,width=60, height=20)
 		self.lb1.grid(row=0, column=0)
 		self.yscroll = tk.Scrollbar(command=self.lb1.yview, orient=tk.VERTICAL)
 		self.yscroll.grid(row=0, column=1,sticky=tk.N+tk.S)
 		self.lb1.configure(yscrollcommand=self.yscroll.set)
-		for i in range(3):
-			self.lb1.insert(i,sdm.print_all("gui")[1])
+		k=0
+		for i in sdm.print_all("gui"):
+			self.lb1.insert(k,i)
+			k+=1
 
-		'''
-		self.lbcont= tk.Listbox(self.frame)
-		self.lbcont.insert(1,"John Doe")
-		self.lbcont.pack(side=tk.TOP, fill=tk.BOTH,expand=1)
-
-		self.canvas.pack(side=tk.TOP, fill=tk.BOTH,expand=1)
-		self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-		self.canvas_frame = self.canvas.create_window((0, 0), window=self.frame, anchor="n")
-		'''
-		
-		#shall we convert this to object-oriented as well? 
+		#shall we convert this to more object-oriented as well? 
 		#Anyways these lines just create the menubar
 		menubar=tk.Menu(self)
 		smenu=tk.Menu(menubar, tearoff=0)
