@@ -227,17 +227,20 @@ def searchfunction():
     conn.close()
     
 #Prints all Rows
-def print_all():
+def print_all(caller):
     
     conn = sqlite3.connect('daba.db')
     c = conn.cursor()
-    
-    print("Here are all the entries in our database:")
+    if(caller=="cl"):
+        print("Here are all the entries in our database:")
     c.execute('SELECT rowid, * FROM students')
     all_rows = c.fetchall()
-    
-    print(tabulate(all_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
-    
+    if(caller=="cl"):
+        print(tabulate(all_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
+    elif(caller=="gui"):
+        return(all_rows)
+
+
     conn.close()
 
 def classAvgs():
@@ -284,7 +287,7 @@ def classAvgs():
             highest_class_avg = class_avg
     
     #Apply inline formatting here as well, idk why is it not working for me, on it
-    print("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
+    return("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
     
     conn.close()
 

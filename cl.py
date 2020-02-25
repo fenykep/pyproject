@@ -37,12 +37,12 @@ if __name__ == "__main__":
             sdb.searchfunction()
             
         elif (sw == "P"):
-            sdb.print_all()
+            sdb.print_all("cl")
                 
         elif (sw == "C"):
-            sdb.classAvgs()
+            print(sdb.classAvgs())
             
-        elif (sw == "EXIT"):
+        elif (sw == "EXIT" or sw == "EXIT()"):
             break
         
         else:
