@@ -260,6 +260,7 @@ def classAvgs():
             
     #This part now calculates average per class, then outputs it and also checks for highest average
     highest_class_avg = 0
+    final_class_output = []
     for student_class in classes:
         c.execute("SELECT matg, scig, eng, dug, artg FROM students WHERE class= '%s'" %(student_class))
         results = c.fetchall()
@@ -279,7 +280,7 @@ def classAvgs():
         class_avg = round(class_total/len(results),1)
         
         #Print Class Average
-        print( student_class,"Average Score: " + str(class_avg))
+        final_class_output.append(( student_class + " Average Score: " + str(class_avg)))
             
         #Calculate if current class avg is higher than highest class avg, and replace it if it is
         if class_avg > highest_class_avg:
@@ -287,7 +288,9 @@ def classAvgs():
             highest_class_avg = class_avg
     
     #Apply inline formatting here as well, idk why is it not working for me, on it
-    return("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
+    final_class_output.append("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
+    
+    return(final_class_output)
     
     conn.close()
 
