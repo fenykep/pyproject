@@ -5,42 +5,43 @@
 
 
 """
-import StudentDatabaseManager as sdb
+import StudentDatabaseManager as sdm
 
 if __name__ == "__main__":
     while True:
         sw = input("[A]dd, [D]elete, [E]dit, [S]earch, [C]lass Averages, [P]rint all - ").upper()
     
         if (sw == "A"):
-            sdb.newEntry()
+            sdm.newEntry()
             
         elif (sw == "D"):
-            sdb.delete(sdb.input_checker(input("Please enter the ID of the row you want to delete: "), "INTEGER"))
+            sdm.delete(sdm.input_checker(input("Please enter the ID of the row you want to delete: "), "INTEGER"))
             
         elif (sw == "E"):
             print("It's okay, we all make mistakes sometimes.")
-            row_to_edit = int(sdb.input_checker(input("Which row would you like to edit? "), "INTEGER"))
+            row_to_edit = int(sdm.input_checker(input("Which row would you like to edit? "), "INTEGER"))
             lifechoices = input("Do you want to edit a specific [V]alue or a whole [R]ow? ").upper()
             
             while True:
                 if (lifechoices == "V"):
-                    sdb.editkey_value(row_to_edit)
+                    sdm.editkey_value(row_to_edit)
                     break;
                     
                 elif (lifechoices == "R"):
-                    sdb.editkey_full(row_to_edit)
+                    sdm.editkey_full(row_to_edit)
                     break;
                 else:
                     lifechoices = input("Invalid Input. Please try again: ").upper()
                 
         elif (sw == "S"):
-            sdb.searchfunction()
+            sdm.searchfunction()
             
         elif (sw == "P"):
-            sdb.print_all("cl")
+            sdm.print_all("cl")
                 
         elif (sw == "C"):
-            print(sdb.classAvgs())
+            #Since the output of the function is multiple variables, they were collated in a list for ease of access
+            print("\n".join(sdm.classAvgs()))
             
         elif (sw == "EXIT" or sw == "EXIT()"):
             break
