@@ -111,7 +111,7 @@ def editkey_value(i):
             value_of_attribute = "'"+value_of_attribute+"'"
             c.execute('UPDATE students SET %s=%s WHERE rowid=%s' %(type_of_attribute,value_of_attribute,i))
             conn.commit()
-            break;
+            break
         elif type_of_attribute in valid_types[4:9]:
             value_of_attribute = input_checker(input("Please enter the new value. ").upper(), "FLOAT")
             value_of_attribute = "'"+str(value_of_attribute)+"'"
@@ -132,7 +132,7 @@ def editkey_value(i):
             
             c.execute('UPDATE students SET sum=%s, avg=%s  WHERE rowid=%s' %(sum_grade,avg_grade,i))
             conn.commit()                    
-            break;
+            break
             
         else:
             print("Invalid input. Please try again.")
@@ -290,9 +290,9 @@ def classAvgs():
     #Apply inline formatting here as well, idk why is it not working for me, on it
     final_class_output.append("The class with the best average is Class " + highest_class + ", with an overall average of " + str(highest_class_avg) + ".")
     
-    return(final_class_output)
-    
     conn.close()
+
+    return(final_class_output)
 
 
 #Validation checker! Multifunctional tool, so make good use of it!
