@@ -1,86 +1,98 @@
 import StudentDatabaseManager as sdm
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import simpledialog
+
+'''
+Okay, so I have to rewrite a great chunk of the code
+there has to be the listbox, which is updated after every function
+I'll try to get rid of the object oriented parts as I want to learn
+them a bit more slowly.
+"UX" design:
+- ditch the menubar (or keep it for the average and search functions)
+-listbox with a stickied scrollbar
+-3 text and 5 float entries under them
+-3 buttons: add, edit, delete
+'''
+	
 
 
 def avgPrint():
-    
-    avgoutput = "\n".join(sdm.classAvgs())
-    
-    messagebox.showinfo('BestClass',avgoutput)
+	avgoutput = "\n".join(sdm.classAvgs())
+	messagebox.showinfo('BestClass',avgoutput)
 
 def donothing():
-   filewin = tk.Toplevel(window)
-   button = tk.Button(filewin, text="Do nothing button")
-   button.pack()
+	filewin = tk.Toplevel(window)
+	button = tk.Button(filewin, text="Do nothing button")
+	button.pack()
+
+def find(t="F"):
+	whotofind = simpledialog.askstring("Input", "Name?",parent=tk.Tk()).upper()
+	sdm.searchfunction(t,whotofind)
 
 def erase():
-    sdm.delete()
-
-        
+	#Here I'd like to use your input checker, or a widget that can only accept numerical input
+	#Also it has to check if the index is in range of the db
+	theTargetoftheTerminator = sdm.input_checker(simpledialog.askstring("Input", "RowID?",parent=tk.Tk()).upper(),"INTEGER",)
+	print(theTargetoftheTerminator)
+	#sdm.delete(theTargetoftheTerminator)
+	#Also after removing the entries from the db I would either have to call
+	#the sql again or just delete the same from the list as well
 
 class Window(tk.Tk):
-    """docstring for window"""
-    def __init__(self):
-        super().__init__()
-        #self.arg = arg
-        '''
-        self.canvas = tk.Canvas(self)
-        self.frame = tk.Frame(self.canvas)
-        #self.tframe = tk.Frame(self)
-        self.scrollbar = tk.Scrollbar(self.canvas,orient="vertical", command=self.canvas.yview)
-        self.canvas.configure(yscrollcommand=self.scrollbar.set)
-        '''
-        self.title("Student Database Manager® 2020")
-        self.geometry('500x600')
-        #Here I have put a label that is tabulated according to
-        #the database
-        self.lb1 = tk.Listbox(self,width=60, height=20)
-        self.lb1.grid(row=0, column=0)
-        self.yscroll = tk.Scrollbar(command=self.lb1.yview, orient=tk.VERTICAL)
-        self.yscroll.grid(row=0, column=1,sticky=tk.N+tk.S)
-        self.lb1.configure(yscrollcommand=self.yscroll.set)
-        k=0
-        for i in sdm.print_all("gui"):
-            self.lb1.insert(k,i)
-            k+=1
+	"""docstring for window"""
+	def __init__(self):
+		super().__init__()
 
-        #shall we convert this to more object-oriented as well? 
-        #Anyways these lines just create the menubar
-        menubar=tk.Menu(self)
-        smenu=tk.Menu(menubar, tearoff=0)
-        
-        smenu.add_command(label="FirstName", command=donothing)
-        smenu.add_command(label="LastName", command=donothing)
-        smenu.add_command(label="RowID", command=donothing)
+		self.title("Student Database Manager® 2020")
+		self.geometry('500x600')
+		#Here I have put a label that is tabulated according to
+		#the database
+		self.lb1 = tk.Listbox(self,width=60, height=20)
+		self.lb1.grid(row=1, column=0, columnspan=8)
+		self.yscroll = tk.Scrollbar(command=self.lb1.yview, orient=tk.VERTICAL)
+		self.yscroll.grid(row=1, column=7,sticky=tk.N+tk.S)
+		self.lb1.configure(yscrollcommand=self.yscroll.set)
+		k=0
+		for i in sdm.print_all("gui"):
+			self.lb1.insert(k,i)
+			k+=1
 
-        smenu.add_separator()
+		self.namein = tk.Entry(self)
+		self.namein.grid(row=2,column=0)
+		self.addressin = tk.Entry(self)
+		self.addressin.grid(row=2,column=1)
+		self.classin = tk.Entry(self)
+		self.classin.grid(row=2,column=2)
+		self.mgradein = tk.Entry(self)
+		self.mgradein.grid(row=2,column=3)
 
-        smenu.add_command(label="Exit", command=self.quit)
-        menubar.add_cascade(label="Search", menu=smenu)
-                
-                
-        fmenu = tk.Menu(menubar, tearoff=0)
-        fmenu.add_command(label="Add", command=donothing)
-        fmenu.add_command(label="Delete", command=donothing)
-        fmenu.add_command(label="Edit", command=donothing)
-        fmenu.add_command(label="Print", command=donothing)
-        fmenu.add_command(label="Averages", command=avgPrint)
+		#shall we convert this to more object-oriented as well? 
+		#Anyways these lines just create the menubar
+		menubar=tk.Menu(self)
+		smenu=tk.Menu(menubar, tearoff=0)
 
-        menubar.add_cascade(label="Entry", menu=fmenu)
-        self.config(menu=menubar)
-        #until this
-        
-        '''
-        #This handles the crossplatform mouse scrolling, bc apparantely different OSs handle it differently
-        self.bind_all("<MouseWheel>", self.mouse_scroll)
-        self.bind_all("<Button-4>", self.mouse_scroll)
-        self.bind_all("<Button-5>", self.mouse_scroll)
-        '''
-        
+		smenu.add_command(label="FirstName", command=lambda:find("F"))
+		smenu.add_command(label="LastName", command=lambda:find("L"))
+		smenu.add_command(label="RowID", command=lambda:find("R"))
 
+		smenu.add_separator()
+
+		smenu.add_command(label="Exit", command=self.quit)
+		menubar.add_cascade(label="Search", menu=smenu)
+
+
+		fmenu = tk.Menu(menubar, tearoff=0)
+		fmenu.add_command(label="Add", command=donothing)
+		fmenu.add_command(label="Delete", command=erase)
+		fmenu.add_command(label="Edit", command=donothing)
+		fmenu.add_command(label="Print", command=donothing)
+		fmenu.add_command(label="Averages", command=avgPrint)
+
+		menubar.add_cascade(label="Entry", menu=fmenu)
+		self.config(menu=menubar)
 
 
 if __name__ == "__main__":
-    window = Window()
-    window.mainloop()
+	window = Window()
+	window.mainloop()

@@ -181,16 +181,17 @@ def editkey_full(i):
     conn.close()
 
 #Search Function!    
-def searchfunction():
+def searchfunction(decision="",student=""):
     
     conn = sqlite3.connect('daba.db')
     c = conn.cursor()
-    
-    decision = input("Search by [F]irst name, [L]ast name, or [R]ow ID? ").upper()
+    if (decision==""):
+        decision = input("Search by [F]irst name, [L]ast name, or [R]ow ID? ").upper()
     
     
     if decision == "F":
-        student = input_checker(input("What is the first name of the student you are searching for? ").upper(), "STRING")
+        if (student==""):
+            student = input_checker(input("What is the first name of the student you are searching for? ").upper(), "STRING")
         c.execute("SELECT rowid,* FROM students WHERE first_name= '%s'" %(student))
         
         student_rows = (c.fetchall())
@@ -202,7 +203,8 @@ def searchfunction():
             
     #Last Name Search
     elif decision == "L":
-        student = input_checker(input("What is the last name of the student you are searching for? ").upper(), "STRING")
+        if (student==""):
+            student = input_checker(input("What is the last name of the student you are searching for? ").upper(), "STRING")
         c.execute("SELECT rowid,* FROM students WHERE last_name= '%s'" %(student))
         
         student_rows = (c.fetchall())
@@ -214,7 +216,8 @@ def searchfunction():
         
     #Row ID Search
     elif decision == "R":
-        student = input_checker(input("What is the Row ID of the student you are searching for? ").upper(), "INTEGER")
+        if (student==""):
+            student = input_checker(input("What is the Row ID of the student you are searching for? ").upper(), "INTEGER")
         c.execute("SELECT rowid, * FROM students WHERE rowid= '%s'" %(student))
         
         student_rows = (c.fetchall())
