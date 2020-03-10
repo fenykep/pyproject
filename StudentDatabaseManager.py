@@ -41,24 +41,34 @@ import sqlite3
 from tabulate import tabulate
 
 #Function to add a new entry to the database
-def newEntry():
+def newEntry(name="",address="",whichclass="",grades=""):
     
     conn = sqlite3.connect('daba.db')
     c = conn.cursor()
     
     print("Please enter the details of the new student.")
-    
+    print("address: ",address)
     student_attributes = ()
-    student_attributes += (input_checker(input("First name: ").upper(), "STRING"),)
-    student_attributes += (input_checker(input("Last name: ").upper(), "STRING"),)
-    student_attributes += (input_checker(input("Address: ").upper(), "STRING"),)
-    student_attributes += (input_checker(input("Class: ").upper(), "STRING"),)
-    student_attributes += (input_checker(input("Mathematics grade: ").upper(), "FLOAT"),)
-    student_attributes += (input_checker(input("Science grade: ").upper(), "FLOAT"),)
-    student_attributes += (input_checker(input("English grade: ").upper(), "FLOAT"),)
-    student_attributes += (input_checker(input("Dutch grade: ").upper(), "FLOAT"),)
-    student_attributes += (input_checker(input("Art grade: ").upper(), "FLOAT"),)
     
+    if(name==" "):
+        student_attributes += (input_checker(input("First name: ").upper(), "STRING"),)
+        student_attributes += (input_checker(input("Last name: ").upper(), "STRING"),)
+        student_attributes += (input_checker(input("Address: ").upper(), "STRING"),)
+        student_attributes += (input_checker(input("Class: ").upper(), "STRING"),)
+        student_attributes += (input_checker(input("Mathematics grade: ").upper(), "FLOAT"),)
+        student_attributes += (input_checker(input("Science grade: ").upper(), "FLOAT"),)
+        student_attributes += (input_checker(input("English grade: ").upper(), "FLOAT"),)
+        student_attributes += (input_checker(input("Dutch grade: ").upper(), "FLOAT"),)
+        student_attributes += (input_checker(input("Art grade: ").upper(), "FLOAT"),)
+    else:
+        student_attributes += (name.split(' ')[0])
+        student_attributes += (name.split(' ')[1])
+        student_attributes += address
+        student_attributes += whichclass
+        student_attributes += (grades.split(' ')[0])
+        student_attributes += (grades.split(' ')[1])
+        student_attributes += (grades.split(' ')[2])
+        student_attributes += (grades.split(' ')[3])
 
     #Avg Calculator
     sum_grade = 0

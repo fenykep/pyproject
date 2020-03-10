@@ -39,16 +39,20 @@ def erase():
 	#Also after removing the entries from the db I would either have to call
 	#the sql again or just delete the same from the list as well
 
+def newalue(be):
+	sdm.newEntry(address="Belen")
+	sdm.print_all("cl")
+
 class Window(tk.Tk):
 	"""docstring for window"""
 	def __init__(self):
 		super().__init__()
 
 		self.title("Student Database Manager® 2020")
-		self.geometry('500x600')
+		self.geometry('690x350')
 		#Here I have put a label that is tabulated according to
 		#the database
-		self.lb1 = tk.Listbox(self,width=60, height=20)
+		self.lb1 = tk.Listbox(self,width=80, height=20)
 		self.lb1.grid(row=1, column=0, columnspan=8)
 		self.yscroll = tk.Scrollbar(command=self.lb1.yview, orient=tk.VERTICAL)
 		self.yscroll.grid(row=1, column=7,sticky=tk.N+tk.S)
@@ -58,14 +62,24 @@ class Window(tk.Tk):
 			self.lb1.insert(k,i)
 			k+=1
 
+		
 		self.namein = tk.Entry(self)
-		self.namein.grid(row=2,column=0)
+		self.namein.grid(row=3,column=0)
+		self.namelab = tk.Label(self, text="Name")
+		self.namelab.grid(row=2,column=0)
 		self.addressin = tk.Entry(self)
-		self.addressin.grid(row=2,column=1)
+		self.addressin.grid(row=3,column=1)
+		self.addlab = tk.Label(self, text="Address")
+		self.addlab.grid(row=2,column=1)
 		self.classin = tk.Entry(self)
-		self.classin.grid(row=2,column=2)
+		self.classin.grid(row=3,column=2)
+		self.classlab = tk.Label(self, text="Class")
+		self.classlab.grid(row=2,column=2)
 		self.mgradein = tk.Entry(self)
-		self.mgradein.grid(row=2,column=3)
+		self.mgradein.grid(row=3,column=3)
+		self.gradelab = tk.Label(self, text="Grades")
+		self.gradelab.grid(row=2,column=3)
+		
 
 		#shall we convert this to more object-oriented as well? 
 		#Anyways these lines just create the menubar
@@ -83,10 +97,10 @@ class Window(tk.Tk):
 
 
 		fmenu = tk.Menu(menubar, tearoff=0)
-		fmenu.add_command(label="Add", command=donothing)
+		fmenu.add_command(label="Add", command=newalue(self.namein.get()))
 		fmenu.add_command(label="Delete", command=erase)
 		fmenu.add_command(label="Edit", command=donothing)
-		fmenu.add_command(label="Print", command=donothing)
+		#fmenu.add_command(label="Print", command=donothing)
 		fmenu.add_command(label="Averages", command=avgPrint)
 
 		menubar.add_cascade(label="Entry", menu=fmenu)
