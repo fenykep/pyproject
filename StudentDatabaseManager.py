@@ -41,16 +41,14 @@ import sqlite3
 from tabulate import tabulate
 
 #Function to add a new entry to the database
-def newEntry(name="",address="",whichclass="",grades=""):
+def newEntry(student_attributes = ()):
     
     conn = sqlite3.connect('daba.db')
     c = conn.cursor()
     
-    print("Please enter the details of the new student.")
-    print("address: ",address)
-    student_attributes = ()
-    
-    if(name==" "):
+        
+    if(student_attributes == ()):
+        print("Please enter the details of the new student.")
         student_attributes += (input_checker(input("First name: ").upper(), "STRING"),)
         student_attributes += (input_checker(input("Last name: ").upper(), "STRING"),)
         student_attributes += (input_checker(input("Address: ").upper(), "STRING"),)
@@ -60,15 +58,6 @@ def newEntry(name="",address="",whichclass="",grades=""):
         student_attributes += (input_checker(input("English grade: ").upper(), "FLOAT"),)
         student_attributes += (input_checker(input("Dutch grade: ").upper(), "FLOAT"),)
         student_attributes += (input_checker(input("Art grade: ").upper(), "FLOAT"),)
-    else:
-        student_attributes += (name.split(' ')[0])
-        student_attributes += (name.split(' ')[1])
-        student_attributes += address
-        student_attributes += whichclass
-        student_attributes += (grades.split(' ')[0])
-        student_attributes += (grades.split(' ')[1])
-        student_attributes += (grades.split(' ')[2])
-        student_attributes += (grades.split(' ')[3])
 
     #Avg Calculator
     sum_grade = 0
@@ -150,26 +139,26 @@ def editkey_value(i):
     conn.close()
 
 #Function to completely replace a row
-def editkey_full(i):
+def editkey_full(i,student_attributes = ()):
     
     conn = sqlite3.connect('daba.db')
     c = conn.cursor()
     
     print("Let's enter all the new values, shall we?")
     
-    student_attributes = ()
-    
-    student_attributes += (input_checker(input("First name: ").upper(), "STRING"),)
-    student_attributes += (input_checker(input("Last name: ").upper(), "STRING"),)
-    student_attributes += (input_checker(input("Address: ").upper(), "STRING"),)
-    student_attributes += (input_checker(input("Class: ").upper(), "STRING"),)
-    student_attributes += (input_checker(input("Mathematics grade: ").upper(), "FLOAT"),)
-    student_attributes += (input_checker(input("Science grade: ").upper(), "FLOAT"),)
-    student_attributes += (input_checker(input("English grade: ").upper(), "FLOAT"),)
-    student_attributes += (input_checker(input("Dutch grade: ").upper(), "FLOAT"),)
-    student_attributes += (input_checker(input("Art grade: ").upper(), "FLOAT"),)
-    
-    
+    if(student_attributes==()):
+        student_attributes += (input_checker(input("First name: ").upper(), "STRING"),)
+        student_attributes += (input_checker(input("Last name: ").upper(), "STRING"),)
+        student_attributes += (input_checker(input("Address: ").upper(), "STRING"),)
+        student_attributes += (input_checker(input("Class: ").upper(), "STRING"),)
+        student_attributes += (input_checker(input("Mathematics grade: ").upper(), "FLOAT"),)
+        student_attributes += (input_checker(input("Science grade: ").upper(), "FLOAT"),)
+        student_attributes += (input_checker(input("English grade: ").upper(), "FLOAT"),)
+        student_attributes += (input_checker(input("Dutch grade: ").upper(), "FLOAT"),)
+        student_attributes += (input_checker(input("Art grade: ").upper(), "FLOAT"),)
+    print("----These will be the new values----")
+    print(student_attributes)
+    print("----These will be the new values----")
     #Avg Calculator
     sum_grade = 0
     for value in student_attributes[4:8]:
@@ -187,6 +176,7 @@ def editkey_full(i):
     
     c.execute("UPDATE students SET first_name=?, last_name=?, address=?, class=?, matg=?, scig=?, eng=?, dug=?, artg=?, sum=?, avg=? WHERE rowid=?",student_attributes)
     conn.commit()
+    print("!executed!")
     
     conn.close()
 
