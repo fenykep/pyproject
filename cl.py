@@ -25,11 +25,11 @@ if __name__ == "__main__":
             while True:
                 if (lifechoices == "V"):
                     sdm.editkey_value(row_to_edit)
-                    break;
+                    break
                     
                 elif (lifechoices == "R"):
                     sdm.editkey_full(row_to_edit)
-                    break;
+                    break
                 else:
                     lifechoices = input("Invalid Input. Please try again: ").upper()
                 
