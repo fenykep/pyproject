@@ -46,7 +46,23 @@ def avgPrint():
 
 def find(t="F"):
 	whotofind = simpledialog.askstring("Input", "Name?",parent=window).upper()
-	sdm.searchfunction(t,whotofind)
+	print(whotofind)
+	#top = tk.Toplevel(master=window)
+	
+	#top.title(whotofind)
+	#popLab = tk.Label(top, text="'Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade'")
+	#popLab.pack(fill=tk.X)
+	window.lift()
+	
+	#window.after(1, lambda: window.focus_force())
+	lb1.focus_set()
+	answer=sdm.searchfunction(t,whotofind)[0][0]
+	print(answer)
+	lb1.index(answer-1)
+	lb1.activate(answer-1)
+	#msg = tk.Message(top, text=answer)
+	#msg.pack(side=tk.TOP)
+	
 
 def erase(theTargetoftheTerminator):
 	#theTargetoftheTerminator = sdm.input_checker(simpledialog.askstring("Input", "RowID?",parent=tk.Tk()).upper(),"INTEGER",)
@@ -80,11 +96,11 @@ def edit():
 		else:
 			if not namein.get()=='':
 				if not namein.get().split(' ')[0]=='':
-					newval[1]=namein.get().split(' ')[0]
+					newval[1]=namein.get().split(' ')[0].upper()
 				if not namein.get().split(' ')[1]=='':
-					newval[2]=namein.get().split(' ')[1]
+					newval[2]=namein.get().split(' ')[1].upper()
 			if not addressin.get()=='':
-				newval[3]=addressin.get()
+				newval[3]=addressin.get().upper()
 			if not classin.get()=='':
 				newval[4]=classin.get()
 			if not mgradein.get()=='':
@@ -106,9 +122,9 @@ def edit():
 
 def addEntry():
 	newval=[0]*9
-	newval[0]=namein.get().split(' ')[0]
-	newval[1]=namein.get().split(' ')[1]
-	newval[2]=addressin.get()
+	newval[0]=namein.get().split(' ')[0].upper()
+	newval[1]=namein.get().split(' ')[1].upper()
+	newval[2]=addressin.get().upper()
 	newval[3]=classin.get()
 	print("newval: ",newval)
 	for i in range(5):
@@ -126,7 +142,7 @@ window.title("Student Database Manager® 2020")
 window.geometry('690x350')
 #Here I have put a label that is tabulated according to
 #the database
-lb1 = tk.Listbox(window,width=80, height=20)
+lb1 = tk.Listbox(window,width=80, height=20,highlightcolor="Red")
 lb1.grid(row=1, column=0, columnspan=8)
 yscroll = tk.Scrollbar(command=lb1.yview, orient=tk.VERTICAL)
 yscroll.grid(row=1, column=7,sticky=tk.N+tk.S)

@@ -195,11 +195,11 @@ def searchfunction(decision="",student=""):
         c.execute("SELECT rowid,* FROM students WHERE first_name= '%s'" %(student))
         
         student_rows = (c.fetchall())
-        
-        print(tabulate(student_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
+        #changed all the prints to return
+        return(student_rows)
         
         if student_rows == []:
-            print("No Matching Records found.")
+            return("No Matching Records found.")
             
     #Last Name Search
     elif decision == "L":
@@ -209,10 +209,10 @@ def searchfunction(decision="",student=""):
         
         student_rows = (c.fetchall())
         
-        print(tabulate(student_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
+        return(student_rows)
         
         if student_rows == []:
-            print("No Matching Records found.")
+            return("No Matching Records found.")
         
     #Row ID Search
     elif decision == "R":
@@ -222,10 +222,10 @@ def searchfunction(decision="",student=""):
         
         student_rows = (c.fetchall())
         
-        print(tabulate(student_rows, headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
+        return(student_rows)
                 
         if student_rows == []:
-            print("No Matching Records found.")
+            return("No Matching Records found.")
    
     conn.close()
     

@@ -6,6 +6,7 @@
 
 """
 import StudentDatabaseManager as sdm
+from tabulate import tabulate
 
 if __name__ == "__main__":
     while True:
@@ -34,8 +35,12 @@ if __name__ == "__main__":
                     lifechoices = input("Invalid Input. Please try again: ").upper()
                 
         elif (sw == "S"):
-            sdm.searchfunction()
-            
+            lookwhatifound = sdm.searchfunction()
+            if not lookwhatifound == "No Matching Records found.":
+                print(tabulate(lookwhatifound,headers=['Row ID', 'First Name', 'Last Name', 'Address', 'Class', 'Math Grade', 'Science Grade', 'English Grade', 'Dutch Grade', 'Art Grade', 'Sum Grade', 'Average Grade']))
+            else:
+                print("No Matching Records found.")
+
         elif (sw == "P"):
             sdm.print_all("cl")
                 
